@@ -1,0 +1,30 @@
+{
+  "name": "veeb",
+  "version": "1.0.0",
+  "description": "VP kursusel loodud veeb",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://kevtlu@github.com/kevtlu/veeb.git"
+  },
+  "keywords": [
+    "Tallinna",
+    "Ülikool",
+    "DTI",
+    "veebiprogrammeerimine",
+    "Node.JS",
+    "Express.JS"
+  ],
+  "author": "Kevin Lillemets",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevtlu/veeb/issues"
+  },
+  "homepage": "https://github.com/kevtlu/veeb#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
