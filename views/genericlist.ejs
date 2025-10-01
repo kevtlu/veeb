@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <title>Kevin Lillemets, veebiprogrammeerimine</title>
+</head>
+<body>
+    <img src="images/AA.png" alt="Kursuse bänner">
+    <h1>Kevin Lillemets, veebiprogrammeerimine</h1>
+    <p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
+    <hr>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+	</ul>
+	<h2><%= h2 %></h2>
+	<ol><% listData.forEach(function(listItem){ %>
+			<li><%= listItem %></li><% }); %>
+	</ol>
+</body>
+</html>
