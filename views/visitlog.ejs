@@ -9,12 +9,12 @@
     <h1>Kevin Lillemets, veebiprogrammeerimine</h1>
     <p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
     <hr>
-	<h2>Siin lehel leiad</h2>
 	<ul>
-		<li><a href="/timenow">Ajainfo</li>
-		<li><a href="/vanasonad">Valik Eesti tuntud vanasõnu</li>
-		<li><a href="/regvisit">Registreeri oma külastus</li>
-		<li><a href="/visitlog">Vaata külastusi</li>
+		<li><a href="/">Avalehele</a></li>
 	</ul>
+	<h2><%= heading %></h2>
+	<ol><% listData.forEach(function(listItem){ %>
+			<li><%= listItem %></li><% }); %>
+	</ol>
 </body>
 </html>
