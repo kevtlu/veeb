@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <title>Kevin Lillemets, veebiprogrammeerimine</title>
+</head>
+<body>
+    <img src="/images/AA.png" alt="Kursuse bänner">
+    <h1>Kevin Lillemets, veebiprogrammeerimine</h1>
+    <p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
+    <hr>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+		<li><a href="/eestifilm/">Eesti filmi avaleht</a></li>
+	</ul>
+	<h2>Filmiga seotud positsioonide lisamine</h2>
+	<form method="POST">
+		<textarea id="positionInput" name="positionInput" rows="5" cols="100" placeholder="Kirjuta siia positsioon..." required></textarea>
+		<input id="positionSubmit" type="submit" name="positionSubmit" value="Salvesta">
+	</form>
+	<p><%= notice%></p>
+</body>
+</html>
