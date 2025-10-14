@@ -13,15 +13,14 @@
 		<li><a href="/">Avalehele</a></li>
 		<li><a href="/eestifilm/">Eesti filmi avaleht</a></li>
 	</ul>
-	<h2>Eesti filmiga seotud inimesed</h2>
-	<ul><% personList.forEach (function(listItem){ %>
-		<li>
-			<%= listItem.first_name %> <%= listItem.last_name %>, sündinud <%= listItem.born %> 
-			<% if (listItem.deceased) { %>
-				, surnud <%= listItem.deceased %>
-			<% } %>
-		</li>
-		<% }); %>
-	</ul>
+	<h2>Filmiga seotud ametite lisamine</h2>
+	<form method="POST">
+		<textarea id="positionInput" name="positionInput" rows="3" cols="25" placeholder="Kirjuta siia amet..." required></textarea>
+		<br>
+		<textarea id="descriptionInput" name="descriptionInput", rows="5" cols="100" placeholder="Kirjuta siia ameti lühitutvustus..."></textarea>
+		<br>
+		<input id="positionSubmit" type="submit" name="positionSubmit" value="Salvesta">
+	</form>
+	<p><%= notice%></p>
 </body>
 </html>

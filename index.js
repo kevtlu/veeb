@@ -129,25 +129,40 @@ app.post("/eestifilm/filmiinimesed_add", (req, res)=>{
 	//res.render("filmiinimesed_add");
 });
 
-app.get("/eestifilm/position_add", (req, res)=>{
-	res.render("position_add", {notice: "Ootan sisestust!"});
+app.get("/eestifilm/ametid", (req, res)=>{
+	const sqlReq = "SELECT * FROM amet";
+	conn.execute(sqlReq, (err, sqlRes)=>{
+		if(err){
+			console.log(err);
+			res.render("ametid", {ametList: []});
+		}
+		else {
+			console.log(sqlRes);
+			res.render("ametid", {ametList: sqlRes});
+		}
+	});
+	//res.render("ametid");
 });
 
-app.post("/eestifilm/position_add", (req, res)=>{
+app.get("/eestifilm/amet_add", (req, res)=>{
+	res.render("amet_add", {notice: "Ootan sisestust!"});
+});
+
+app.post("/eestifilm/amet_add", (req, res)=>{
 	console.log(req.body);
 	//kontrollime, kas andmed on ikka olemas
-	if(!req.body.positionInput){
-		res.render("position_add", {notice: "Andmed on vigased!"});
+	if(!req.body.positionInput || !req.body.descriptionInput){
+		res.render("amet_add", {notice: "Andmed on vigased!"});
 	}
 	else {
-		let sqlReq = "INSERT INTO position (position_name) VALUES (?)";
-		conn.execute(sqlReq, [req.body.positionInput], (err, sqlRes)=>{
+		let sqlReq = "INSERT INTO amet (position_name, description) VALUES (?, ?)";
+		conn.execute(sqlReq, [req.body.positionInput, req.body.descriptionInput], (err, sqlRes)=>{
 			if(err){
 				console.log(err);
-				res.render("position_add", {notice: "Tekkis tehniline viga: " + err});
+				res.render("amet_add", {notice: "Tekkis tehniline viga: " + err});
 			}
 			else {
-				res.render("position_add", {notice: "Andmed edukalt salvestatud!"});
+				res.redirect("/eestifilm/ametid");
 			}
 		});
 	}
