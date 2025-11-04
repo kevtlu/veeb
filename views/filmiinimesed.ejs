@@ -14,14 +14,15 @@
 		<li><a href="/eestifilm/">Eesti filmi avaleht</a></li>
 	</ul>
 	<h2>Eesti filmiga seotud inimesed</h2>
-	<ul><% personList.forEach (function(listItem){ %>
+	<ul><% personList.forEach (function(listItem){ 
+		const birthDateOutput = dateEt.givenDate(listItem.born);
+		const deceasedDateOutput = dateEt.givenDate(listItem.deceased);
+	%>
 		<li>
-			<%= listItem.first_name %> <%= listItem.last_name %>, sündinud <%= listItem.born %> 
-			<% if (listItem.deceased) { %>
-				, surnud <%= listItem.deceased %>
+			<%= listItem.first_name %> <%= listItem.last_name %>, sündinud <%= birthDateOutput %><% if (listItem.deceased) { %>, surnud <%= deceasedDateOutput %>
 			<% } %>
 		</li>
-		<% }); %>
+	<% });%>
 	</ul>
 </body>
 </html>

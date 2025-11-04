@@ -11,9 +11,14 @@
     <hr>
 	<ul>
 		<li><a href="/">Avalehele</a></li>
-		<li><a href="/regvisit">Registreeri veel üks külastus</a></li>
+		<li><a href="/eestifilm/">Eesti filmi avaleht</a></li>
 	</ul>
-	<hr>
-	<p><%= visitor %> külastus edukalt salvestatud</p>
+	<h2>Seosed isikute, filmide ja ametite vahel</h2>
+	<ul><% seosedList.forEach (function(listItem){ %>
+		<li>
+			<%= listItem.first_name %> <%= listItem.last_name %> on filmis "<%= listItem.title %>" <%= listItem.position_name %><% if (listItem.position_id != rezId){ %>, mängib rolli <%= listItem.role %><% } %>			
+		</li>
+		<% }); %>
+	</ul>
 </body>
 </html>

@@ -15,4 +15,10 @@ const tellTimeET = function(){
 	return timeNow.getHours() + ":" + timeNow.getMinutes() + ":" + timeNow.getSeconds();
 }
 
-module.exports = {longDate: tellDateET, weekDay: tellDayET, time: tellTimeET};
+const givenDateFormattedET = function(dateFromDb){
+	const givenDate = new Date(dateFromDb);
+	const monthNamesET = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"];
+	return givenDate.getDate() + ". " + monthNamesET[givenDate.getMonth()] + " " + givenDate.getFullYear();
+}
+
+module.exports = {longDate: tellDateET, weekDay: tellDayET, time: tellTimeET, givenDate: givenDateFormattedET};

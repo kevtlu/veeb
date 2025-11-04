@@ -11,9 +11,13 @@
     <hr>
 	<ul>
 		<li><a href="/">Avalehele</a></li>
-		<li><a href="/regvisit">Registreeri veel üks külastus</a></li>
+		<li><a href="/eestifilm/">Eesti filmi avaleht</a></li>
+		<li><a href="/eestifilm/film_add">Eesti filmide lisamise lehele</a></li>
 	</ul>
-	<hr>
-	<p><%= visitor %> külastus edukalt salvestatud</p>
+	<h2>Eesti filmid</h2>
+	<ul><% filmList.forEach (function(listItem){ %>
+		<li><%= listItem.title %>, toodetud aastal <%= listItem.production_year %>, kestus <%= listItem.duration %> minutit. <%= listItem.description %></li>
+		<% }); %>
+	</ul>
 </body>
 </html>
