@@ -35,10 +35,10 @@ const galleryphotouploadPagePost = async (req, res)=>{
 		//loon pisipildi (100x100)
 		await sharp(req.file.destination + fileName).resize(100,100).jpeg({quality: 90}).toFile("./public/gallery/thumbs/" + fileName);
 		conn = await mysql.createConnection(dbConf);
-		let sqlReq = "INSERT INTO galleryphotos_aa (filename, origname, alttext, privacy, userid) VALUES (?,?,?,?,?)";
+		let sqlReq = "INSERT INTO galleryphotos (filename, origname, alttext, privacy, userid) VALUES (?,?,?,?,?)";
 		//Kuna kasutajakontosid ja nende id-sid veel pole, siis ...
 		const userId = 1;
-		const [result] = await conn.execute(sqlReq, [fileName, req.body.originalname, req.body.altInput, req.body.privacyInput, userId]);
+		const [result] = await conn.execute(sqlReq, [fileName, req.file.originalname, req.body.altInput, req.body.privacyInput, userId]);
 		console.log("Lisati foto id: " + result.insertId);
 		res.render("galleryphotoupload");
 	}
