@@ -11,12 +11,18 @@
     <hr>
 	<h2>Siin lehel leiad</h2>
 	<ul>
-		<li><a href="/timenow">Ajainfo</li>
-		<li><a href="/vanasonad">Valik Eesti tuntud vanasõnu</li>
-		<li><a href="/visits">Registreeri oma külastus</li>
-		<li><a href="/visits/log">Vaata külastusi</li>
-		<li><a href="/eestifilm">Eesti film</li>
-		<li><a href="/galleryphotoupload">Galeriipiltide üleslaadimine</li>
+		<li><a href="/timenow">Ajainfo</a></li>
+		<li><a href="/vanasonad">Valik Eesti tuntud vanasõnu</a></li>
+		<li><a href="/visits">Registreeri oma külastus</a></li>
+		<li><a href="/visits/log">Vaata külastusi</a></li>
+		<li><a href="/eestifilm">Eesti film</a></li>
+		<li><a href="/galleryphotoupload">Galeriipiltide üleslaadimine</a></li>
 	</ul>
+	<% if (typeof latestPhoto !== 'undefined' && latestPhoto) { %>
+        <hr>
+        <h3>Viimati lisatud avalik foto:</h3>
+        <img src="/gallery/normal/<%= latestPhoto.filename %>" alt="<%= latestPhoto.alttext %>" style="max-width: 800px; height: auto;">
+        <p><%= latestPhoto.alttext %></p>
+    <% } %>
 </body>
 </html>

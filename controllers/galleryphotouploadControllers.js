@@ -2,7 +2,6 @@ const mysql = require("mysql2/promise");
 const fs = require("fs").promises;
 const sharp = require("sharp");
 const dbInfo = require("../../../vp2025config");
-
 const dbConf = {
 	host: dbInfo.configData.host,
 	user: dbInfo.configData.user,
@@ -30,8 +29,10 @@ const galleryphotouploadPagePost = async (req, res)=>{
 		const fileName = "vp_" + Date.now() + ".jpg";
 		console.log(fileName);
 		await fs.rename(req.file.path, req.file.destination + fileName);
-		//loon normaalmõõdus foto (800x600)
-		await sharp(req.file.destination + fileName).resize(800,600).jpeg({quality: 90}).toFile("./public/gallery/normal/" + fileName);
+		//vesimärgi failitee
+		const watermarkPath = "./public/images/vp_logo_small.png"
+		//loon normaalmõõdus foto (800x600) ja lisan vesimärgi
+		await sharp(req.file.destination + fileName).resize(800,600).composite([{input: watermarkPath, gravity: 'southeast'}]).jpeg({quality: 90}).toFile("./public/gallery/normal/" + fileName);
 		//loon pisipildi (100x100)
 		await sharp(req.file.destination + fileName).resize(100,100).jpeg({quality: 90}).toFile("./public/gallery/thumbs/" + fileName);
 		conn = await mysql.createConnection(dbConf);
