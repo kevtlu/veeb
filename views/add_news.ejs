@@ -1,0 +1,46 @@
+<!-- <!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <title>Kevin Lillemets, veebiprogrammeerimine</title>
+</head>
+<body>
+    <img src="/images/AA.png" alt="Kursuse bänner">
+    <h1>Kevin Lillemets, veebiprogrammeerimine</h1>
+    <p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
+    <hr>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+		<li><a href="/news">Uudised</a></li>
+	</ul>
+	
+	<% if (locals.notice && notice) { %>
+        <p><strong><%= notice %></strong></p>
+    <% } %>
+  
+	<h2>Lisa uus uudis</h2>
+	<form method="POST" action="/news/add" enctype="multipart/form-data">
+        <label for="titleInput">Pealkiri (kohustuslik):</label><br>
+        <input type="text" id="titleInput" name="titleInput" required style="width: 400px;">
+        <br><br>
+
+        <label for="contentInput">Uudise sisu (kohustuslik):</label><br>
+        <textarea id="contentInput" name="contentInput" rows="10" cols="80" required></textarea>
+        <br><br>
+
+        <label for="expiredInput">Aegumiskuupäev (kohustuslik):</label><br>
+        <input type="date" id="expiredInput" name="expiredInput" required>
+        <br><br>
+
+		<label for="photoInput">Pilt (valikuline):</label><br>
+        <input type="file" id="photoInput" name="photoInput" accept="image/jpeg,image/png,image/gif">
+        <br><br>
+
+        <label for="altInput">Pildi kirjeldus (alt-tekst):</label><br>
+        <input type="text" id="altInput" name="altInput" placeholder="Nõutav, kui pilt on lisatud" style="width: 400px;">
+        <br><br>
+
+        <input type="submit" value="Salvesta uudis">
+    </form>
+</body>
+</html> -->

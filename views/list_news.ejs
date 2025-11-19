@@ -1,0 +1,41 @@
+<!-- <!DOCTYPE html>
+<html lang="et">
+<head>
+   <meta charset="utf-8">
+	<title>Kevin Lillemets - Uudiste nimekiri</title>
+  
+  <link rel="stylesheet">
+
+</head>
+<body>
+	<img src="images/AA.png" alt="Kursuse bänner">
+  <h1>Kevin Lillemets, veebiprogrammeerimine</h1>
+  <p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
+  <hr>
+
+  <ul>
+	<li><a href="/">Avalehele</a></li>
+	<li><a href="/news/add">Lisa uus uudis</a></li>
+  </ul>
+
+	<h2>Värsked uudised</h2>
+
+  <% if (news && news.length > 0) { %>
+      <% news.forEach(item => { %>
+          <div class="news-item">
+              <h2><%= item.title %></h2>
+              <pre><%= item.content %></pre>
+              
+              <% if (item.filename) { %>
+                  <img src="/newsphotos/normal/<%= item.filename %>" alt="<%= item.alttext %>">
+              <% } %>
+              
+              <p><small>Aegub: <%= item.expired.toLocaleDateString('et-EE') %></small></p>
+          </div>
+      <% }) %>
+  <% } else { %>
+      <p>Hetkel värskeid uudiseid pole.</p>
+  <% } %>
+
+  </body>
+</html> -->

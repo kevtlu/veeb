@@ -75,4 +75,8 @@ app.use("/galleryphotoupload", galleryphotouploadRouter);
 const photogalleryRouter = require("./routes/photogalleryRoutes");
 app.use("/photogallery", photogalleryRouter);
 
+//kasutajakonto loomise marsruudid
+const signupRouter = require("./routes/signupRoutes");
+app.use("/signup", signupRouter);
+
 app.listen(5318);
