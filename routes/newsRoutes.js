@@ -1,17 +1,24 @@
-/*  const express = require("express");
-const router = express.Router();
+const express = require("express");
 const multer = require("multer");
 
-const uploader = multer({dest: "./public/newsphotos/orig/"});
+const router = express.Router();
+//seadistame vahevara fotode üleslaadimiseks kindlasse kataloogi
+const uploader = multer({dest: "./public/newsphotos/"});
 
-const { 
-    newsHome,
-	addNewsPage, 
-	addNewsPost
-} = require("../controllers/newsControllers"); 
+//kontrollerid
+const {
+	newsHome,
+	addNewsPage,
+	addNewsPagePost,
+	newsListPage} = require("../controllers/newsControllers");
 
+//app.get("/news", (req, res)=>{
 router.route("/").get(newsHome);
-router.route("/add").get(addNewsPage);
-router.route("/add").post(uploader.single("photoInput"), addNewsPost);
 
-module.exports = router; */
+router.route("/addnews").get(addNewsPage);
+
+router.route("/addnews").post(uploader.single("photoInput"), addNewsPagePost);
+
+router.route("/read").get(newsListPage);
+	
+module.exports = router;

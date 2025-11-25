@@ -19,8 +19,17 @@
 		<li><a href="/eestifilm">Eesti film</a></li>
 		<li><a href="/galleryphotoupload">Galeriipiltide üleslaadimine</a></li>
 		<li><a href="/photogallery">Fotogalerii</a></li>
-		<!-- <li><a href="/news">Vaata uudiseid</a></li> -->
+		<li><a href="/news">Uudised</a></li>
 	</ul>
+    <hr>
+	<h2>Viimane uudis:</h2>
+    <% if (locals.latestNews) { %>
+        <h3><a href="/news/read"><%= latestNews.title %></a></h3>
+        <p><%= latestNews.content.substring(0, 150) %>... <a href="/news/read">Loe edasi</a></p>
+        <p>Lisatud: <%= latestNews.added.toLocaleString("et-EE") %></p>
+    <% } else { %>
+        <p>Uudiseid hetkel ei ole.</p>
+    <% } %>
     <hr>
     <h2>Viimati lisatud avalik foto:</h2>
     <img src="<%= imgFile %>" alt="<%= imgAlt %>">

@@ -19,6 +19,7 @@ const dbConf = {
  
  app.get("/", async (req, res)=>{
 	let conn;
+	let latestNews = null;
 	try {
 		conn = await mysql.createConnection(dbConf);
 		let sqlReq = "SELECT filename, alttext FROM galleryphotos WHERE id=(SELECT MAX(id) FROM galleryphotos WHERE privacy=? AND deleted IS NULL)";
@@ -26,15 +27,28 @@ const dbConf = {
 		const [rows, fields] = await conn.execute(sqlReq, [privacy]);
 		console.log(rows);
 		let imgAlt = "Avalik foto";
-		if(rows[0].alttext != ""){
-			imgAlt = rows[0].alttext;
+		let imgFile = "images/otsin_pilte.jpg";
+		if(rows.length > 0){
+		    if(rows[0].alttext != ""){
+		        imgAlt = rows[0].alttext;
+		    }
+		    imgFile = "gallery/normal/" + rows[0].filename;
 		}
-		res.render("index", {imgFile: "gallery/normal/" + rows[0].filename, imgAlt: imgAlt});
+		const newsSql = "SELECT title, content, added FROM news WHERE expired > CURDATE() ORDER BY added DESC LIMIT 1";
+		const [newsRows] = await conn.execute(newsSql);
+		if (newsRows.length > 0) {
+			latestNews = newsRows[0];
+		}
+		res.render("index", {
+		    imgFile: imgFile, 
+		    imgAlt: imgAlt,
+		    latestNews: latestNews
+		});
 	}
 	catch(err){
 		console.log(err);
 		//res.render("index");
-		res.render("index", {imgFile: "images/otsin_pilte.jpg", imgAlt: "Tunnen end, kui pilti otsiv lammas ..."});
+		res.render("index", {imgFile: "images/otsin_pilte.jpg", imgAlt: "Tunnen end, kui pilti otsiv lammas ...", latestNews: null});
 	}
 	finally {
 		if(conn){
@@ -74,6 +88,10 @@ app.use("/galleryphotoupload", galleryphotouploadRouter);
 //fotogalerii marsruudid
 const photogalleryRouter = require("./routes/photogalleryRoutes");
 app.use("/photogallery", photogalleryRouter);
+
+//Uudiste osa eraldi marsruutide failiga
+const newsRouter = require("./routes/newsRoutes");
+app.use("/news", newsRouter);
 
 //kasutajakonto loomise marsruudid
 const signupRouter = require("./routes/signupRoutes");

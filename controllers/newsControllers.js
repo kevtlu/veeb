@@ -1,7 +1,8 @@
-/* const mysql = require("mysql2/promise");
-const fs = require("fs").promises;
+const mysql = require("mysql2/promise");
 const dbInfo = require("../../../vp2025config");
-const sharp = require("sharp");
+const watermarkFile = "./public/images/vp_logo_small.png";
+const fs = require("fs/promises");
+const path = require("path");
 
 const dbConf = {
 	host: dbInfo.configData.host,
@@ -10,102 +11,100 @@ const dbConf = {
 	database: dbInfo.configData.dataBase
 };
 
-//@desc Home page for news
+//@desc Home page for news section
 //@route GET /news
 //@access public
-const newsHome = async (req, res) => {
-	let conn;
-	try{
-		conn = await mysql.createConnection(dbConf);
-		const sql = "SELECT * FROM news WHERE expired > ? ORDER BY id DESC"
-		const [newsItems] = await conn.execute(sql, [new Date()]);
-		res.render("list_news", {news: newsItems });
-	}
-	catch (err) {
-		console.error("Viga uudiste kuvamisel: " + err);
-		res.render("list_news", { news: [] });
-	}
-	finally {
-		if(conn){
-			await conn.end();
-			console.log("Andmebaasi ühendus suletud!")
-		}
-	}
+
+const newsHome = (req, res)=>{
+	res.render("news");
 };
 
-//@desc Page for adding news
-//@route GET /news/add
+//@desc page for adding news
+//@route GET /news/addnews
 //@access public
-const addNewsPage = (req, res) => {
-	res.render("add_news", { notice: "Lisa uus uudis" });
+
+const addNewsPage = (req, res)=>{
+	res.render("addnews", {errorMsg: ""});
 };
 
-//@desc Page for adding news
-//@route POST /news/add
+//@desc page for uploading gallery pictures
+//@route POST /news/addnews
 //@access public
-const addNewsPost = async (req, res) => {
+
+const addNewsPagePost = async (req, res)=>{
 	let conn;
-	const { titleInput, contentInput, expiredInput, altInput } = req.body;
-	const userId = 1;
-	let photoFilename = null;
-	let originalName = null;
-	let altText = null;
-	let finalOriginalPath = null;
-
-	if (!titleInput || !contentInput || !expiredInput) {
-		if (req.file) { await fs.unlink(req.file.path); }
-		return res.render("add_news", { notice: "Viga: Pealkiri, sisu ja aegumiskuupäev on kohustuslikud! "});
-	}
-
-	//pilditöötlus
-	if (req.file) {
-		photoFilename = 'news_' + Date.now() + '.jpg';
-		originalName = req.file.originalname;
-		altText = altInput || "Uudise pilt";
-
-		finalOriginalPath = req.file.destination + photoFilename;
-
-		try {
-			await fs.rename(req.file.path, finalOriginalPath);
-			await sharp(finalOriginalPath).resize({ width: 800 }).jpeg({ quality: 90 }).toFile("./public/newsphotos/normal/" + photoFilename);
-			await sharp(finalOriginalPath).resize({ width: 150, height: 150, fit: 'cover' }).jpeg({ quality: 90 }).toFile("./public/newsphotos/thumbs/" + photoFilename);
-		}
-		catch(err) {
-			console.error("Viga pildi töötlemisel: " + err);
-			if (finalOriginalPath) { await fs.unlink(finalOriginalPath).catch(e => console.error(e)); }
-			await fs.unlink(req.file.path).catch(e => console.error(e));
-			return res.render("add_news", { notice: "Viga pildi töötlemisel." });
-		}
-	}
+	let photoFileName = null;
+	let photoOriginalName = null;
+	console.log(req.body);
+	console.log(req.file);
+	
 	try {
 		conn = await mysql.createConnection(dbConf);
-		const sql = "INSERT INTO news (title, content, expired, user_id, filename, origname, alttext) VALUES (?,?,?,?,?,?,?)";
-		await conn.execute(sql, [titleInput, contentInput, expiredInput, userId, photoFilename, originalName, altText]);
-		console.log("Uudis salvestatud!");
-		res.redirect("/news")
+		if(req.file){
+		  const oldPath = req.file.path;
+		  photoOriginalName = req.file.originalname;
+		  const extension = path.extname(photoOriginalName);
+		  photoFileName = "news_" + Date.now() + extension;
+		  const newPath = path.join(path.dirname(oldPath), photoFileName);
+		  await fs.rename(oldPath, newPath);
+	  }
+	const sql = "INSERT INTO news (title, content, expired, user_id, filename, origname, alttext) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	const data = [
+		  req.body.titleInput, 
+		  req.body.newsInput, 
+		  req.body.expireInput,
+		  1,
+		  photoFileName,
+		  photoOriginalName,
+		  req.body.altTextInput || null
+	    ];  
+		await conn.execute(sql, data);
+		res.redirect("/news");
+	}
+	catch(err) {
+	  console.log(err);
+	  if(req.file && req.file.path){
+		  await fs.unlink(req.file.path).catch(e => console.log("Faili kustutamine ebaõnnestus", e));
+	  }
+	  res.render("addnews", {errorMsg: "Uudise salvestamisel tekkis viga!"});
+	}
+	finally {
+	  if(conn){
+		await conn.end();
+		console.log("Andmebaasiühendus suletud!");
+	  }
+	}
+	
+};
+
+//@desc page news list
+//@route GET /news/read
+//@access public
+
+const newsListPage = async (req, res)=>{
+	let conn;
+	let newsData = [];
+	try {
+		conn = await mysql.createConnection(dbConf);
+		const sql = "SELECT id, title, content, filename, alttext, added FROM news WHERE expired > CURDATE() ORDER BY added DESC";
+		const [rows] = await conn.execute(sql);
+		newsData = rows;
+		res.render("newslist", {newsData: newsData});
 	}
 	catch (err) {
-		console.error("Viga uudise salvestamisel andmebaasi: " + err);
-		if (req.file && finalOriginalPath) {
-			try {
-				await fs.unlink(finalOriginalPath);
-				await fs.unlink("./public/newsphotos/normal/" + photoFilename);
-				await fs.unlink("./public/newsphotos/thumbs/" + photoFilename);
-			}
-			catch (e) { console.error("Veajärgne piltide kustutamine ebaõnnestus!", e); }
-		}
-		res.render("add_news", {notice: "Tekkis tehniline viga salvestamisel!"});
+		console.log(err);
+		res.render("newslist", {newsData: [], error: "Uudiste lugemisel tekkis viga."});
 	}
 	finally {
 		if(conn){
 			await conn.end();
-			console.log("Andmebaasi ühendus suletud!")
 		}
-	};
+	}
 };
 
 module.exports = {
 	newsHome,
 	addNewsPage,
-	addNewsPost
-}; */
+	addNewsPagePost,
+	newsListPage
+};

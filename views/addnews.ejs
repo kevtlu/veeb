@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <title>Kevin Lillemets, veebiprogrammeerimine</title>
+</head>
+<body>
+    <img src="/images/AA.png" alt="Kursuse bänner">
+    <h1>Kevin Lillemets, veebiprogrammeerimine</h1>
+    <p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
+    <hr>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+		<li><a href="/news">Uudiste avalehele</a></li>
+	</ul>
+	<h2>Lisa uudis</h2>
+	<% if (locals.errorMsg) { %>
+	    <p style="color: red;"><%= errorMsg %></p>
+	<% } %>
+	
+	<form method="POST" enctype="multipart/form-data">
+	  <label for="titleInput">Uudise pealkiri: </label>
+      <input type="text" id="titleInput" name="titleInput" placeholder="Uudise pealkiri ...">
+	  <br>
+	  <label for="newsInput">Uudise sisu: </label>
+	  <br>
+	  <textarea id="newsInput" name="newsInput" placeholder="Uudise sisu ..." cols="100" rows="5"></textarea>
+	  <br>
+	  <label for="expireInput">Uudise aegumiskuupäev: </label>
+	  <input type="date" id="expireInput" name="expireInput" required>
+	  <br>
+	  <label for="photoInput">Lisa uudisele pilt (valikuline): </label>
+	  <input type="file" id="photoInput" name="photoInput" accept="image/jpeg">
+	  <br>
+	  <label for="altTextInput">Pilti kirjeldav tekst (valikuline): </label>
+	  <input type="text" id="altTextInput" name="altTextInput" placeholder="Pilti kirjeldav tekst ...">
+	  <br>
+	  <input type="submit" id="newsSubmit" name="newsSubmit" value="Salvesta">
+  </form>
+</body>
+</html>
