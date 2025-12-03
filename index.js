@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const fs = require("fs");
 const bodyparser = require("body-parser");
 const mysql = require("mysql2/promise");
@@ -6,30 +7,33 @@ const session = require("express-session");
 const dateEt = require("./src/dateTimeET");
 const dbInfo = require("../../vp2025config");
 const checkLogin = require("./src/checkLogin");
+const pool = require("./src/dbPool");
 const textRef = "public/txt/vanasõnad.txt";
 const app = express();
 //sessiooni kasutamine
-app.use(session({secret: dbInfo.configData.sessionSecret, saveUninitialized: true, resave: true}));
+//app.use(session({secret: dbInfo.configData.sessionSecret, saveUninitialized: true, resave: true}));
+app.use(session({secret: process.env.SES_SECRET, saveUninitialized: true, resave: true}));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyparser.urlencoded({extended: true}));
 
-const dbConf = {
+/* const dbConf = {
 	host: dbInfo.configData.host,
 	user: dbInfo.configData.user,
 	password: dbInfo.configData.passWord,
 	database: dbInfo.configData.dataBase
- };
+ }; */
  
  app.get("/", async (req, res)=>{
-	let conn;
+	//let conn;
 	let latestNews = null;
 	try {
-		conn = await mysql.createConnection(dbConf);
+		//conn = await mysql.createConnection(dbConf);
 		let sqlReq = "SELECT filename, alttext FROM galleryphotos WHERE id=(SELECT MAX(id) FROM galleryphotos WHERE privacy=? AND deleted IS NULL)";
 		const privacy = 3;
-		const [rows, fields] = await conn.execute(sqlReq, [privacy]);
-		console.log(rows);
+		//const [rows, fields] = await conn.execute(sqlReq, [privacy]);
+		const [rows, fields] = await pool.execute(sqlReq, [privacy]);
+		//console.log(rows);
 		let imgAlt = "Avalik foto";
 		let imgFile = "images/otsin_pilte.jpg";
 		if(rows.length > 0){
@@ -39,7 +43,7 @@ const dbConf = {
 		    imgFile = "gallery/normal/" + rows[0].filename;
 		}
 		const newsSql = "SELECT title, content, added FROM news WHERE expired > CURDATE() ORDER BY added DESC LIMIT 1";
-		const [newsRows] = await conn.execute(newsSql);
+		const [newsRows] = await pool.execute(newsSql);
 		if (newsRows.length > 0) {
 			latestNews = newsRows[0];
 		}
@@ -55,10 +59,10 @@ const dbConf = {
 		res.render("index", {imgFile: "images/otsin_pilte.jpg", imgAlt: "Tunnen end, kui pilti otsiv lammas ...", latestNews: null});
 	}
 	finally {
-		if(conn){
+		/* if(conn){
 			await conn.end();
 			console.log("Andmebaasiühendus suletud!");
-		}
+		} */
 	}
 });
 

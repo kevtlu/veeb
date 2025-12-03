@@ -1,14 +1,14 @@
 const fs = require("fs");
 const dateEt = require("../src/dateTimeET");
 const mysql = require("mysql2/promise");
-const dbInfo = require("../../../vp2025config");
-
+const pool = require("../src/dbPool");
+/* const dbInfo = require("../../../vp2025config");
 const dbConf = {
 	host: dbInfo.configData.host,
 	user: dbInfo.configData.user,
 	password: dbInfo.configData.passWord,
 	database: dbInfo.configData.dataBase
- };
+ }; */
 
 //@desc page for registering visitors
 //@route GET /visits

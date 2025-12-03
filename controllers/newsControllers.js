@@ -1,15 +1,15 @@
 const mysql = require("mysql2/promise");
-const dbInfo = require("../../../vp2025config");
 const watermarkFile = "./public/images/vp_logo_small.png";
 const fs = require("fs/promises");
 const path = require("path");
-
+const pool = require("../src/dbPool");
+/* const dbInfo = require("../../../vp2025config");
 const dbConf = {
 	host: dbInfo.configData.host,
 	user: dbInfo.configData.user,
 	password: dbInfo.configData.passWord,
 	database: dbInfo.configData.dataBase
-};
+}; */
 
 //@desc Home page for news section
 //@route GET /news
@@ -32,14 +32,14 @@ const addNewsPage = (req, res)=>{
 //@access public
 
 const addNewsPagePost = async (req, res)=>{
-	let conn;
+	//let conn;
 	let photoFileName = null;
 	let photoOriginalName = null;
 	console.log(req.body);
 	console.log(req.file);
 	
 	try {
-		conn = await mysql.createConnection(dbConf);
+		//conn = await mysql.createConnection(dbConf);
 		if(req.file){
 		  const oldPath = req.file.path;
 		  photoOriginalName = req.file.originalname;
@@ -58,7 +58,7 @@ const addNewsPagePost = async (req, res)=>{
 		  photoOriginalName,
 		  req.body.altTextInput || null
 	    ];  
-		await conn.execute(sql, data);
+		await pool.execute(sql, data);
 		res.redirect("/news");
 	}
 	catch(err) {
@@ -69,10 +69,10 @@ const addNewsPagePost = async (req, res)=>{
 	  res.render("addnews", {errorMsg: "Uudise salvestamisel tekkis viga!"});
 	}
 	finally {
-	  if(conn){
+	  /* if(conn){
 		await conn.end();
 		console.log("Andmebaasiühendus suletud!");
-	  }
+	  } */
 	}
 	
 };
@@ -82,12 +82,12 @@ const addNewsPagePost = async (req, res)=>{
 //@access public
 
 const newsListPage = async (req, res)=>{
-	let conn;
+	//let conn;
 	let newsData = [];
 	try {
-		conn = await mysql.createConnection(dbConf);
+		//conn = await mysql.createConnection(dbConf);
 		const sql = "SELECT id, title, content, filename, alttext, added FROM news WHERE expired > CURDATE() ORDER BY added DESC";
-		const [rows] = await conn.execute(sql);
+		const [rows] = await pool.execute(sql);
 		newsData = rows;
 		res.render("newslist", {newsData: newsData});
 	}
@@ -96,9 +96,9 @@ const newsListPage = async (req, res)=>{
 		res.render("newslist", {newsData: [], error: "Uudiste lugemisel tekkis viga."});
 	}
 	finally {
-		if(conn){
+		/* if(conn){
 			await conn.end();
-		}
+		} */
 	}
 };
 

@@ -1,12 +1,13 @@
 const mysql = require("mysql2/promise");
 const argon2 = require("argon2");
-const dbInfo = require("../../../vp2025config");
+const pool = require("../src/dbPool");
+/* const dbInfo = require("../../../vp2025config");
 const dbConf = {
 	host: dbInfo.configData.host,
 	user: dbInfo.configData.user,
 	password: dbInfo.configData.passWord,
 	database: dbInfo.configData.dataBase
- };
+ }; */
 
 //@desc page for logging in
 //@route GET /signin
@@ -21,7 +22,7 @@ const signinPage = (req, res)=>{
 //@access public
 
 const signinPagePost = async (req, res)=>{
-	let conn;
+	//let conn;
 	console.log(req.body);
 	//andmete lihtsam valideerimine
 	if(
@@ -33,10 +34,10 @@ const signinPagePost = async (req, res)=>{
 	  return res.render("signin", {notice: notice});
 	}
 	try {
-		conn = await mysql.createConnection(dbConf);
+		//conn = await mysql.createConnection(dbConf);
 		//küsime andmebaasist sisestatud kasutajatunnusega kasutaja id ja parooli
 		let sqlReq = "SELECT id, password FROM users_aa WHERE email = ?";
-		const [users] = await conn.execute(sqlReq, [req.body.emailInput]);
+		const [users] = await pool.execute(sqlReq, [req.body.emailInput]);
 		if(users.length === 0){
 		  let notice = "Kasutajatunnus ja/või parool on vale!";
 	      console.log(notice);
@@ -53,7 +54,7 @@ const signinPagePost = async (req, res)=>{
 			//võtame kasutusele sessioonimuutujad
 			req.session.userId = user.id;
 			sqlReq = "SELECT first_name, last_name FROM users_aa WHERE id = ?";
-			const [users] = await conn.execute(sqlReq, [req.session.userId]);
+			const [users] = await pool.execute(sqlReq, [req.session.userId]);
 			req.session.userFirstName = users[0].first_name;
 			req.session.userLastName = users[0].last_name;
 			return res.redirect("/home");
@@ -70,10 +71,10 @@ const signinPagePost = async (req, res)=>{
 		res.render("signin", {notice: "Tehniline viga!"});
 	}
 	finally {
-		if(conn){
+		/* if(conn){
 			await conn.end();
 			console.log("Andmebaasiühendus suletud!");
-		}
+		} */
 	}
 };
 

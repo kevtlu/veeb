@@ -1,13 +1,13 @@
 const mysql = require("mysql2/promise");
+const pool = require("../src/dbPool");
 //const fs = require("fs").promises;
-const dbInfo = require("../../../vp2025config");
-
+/* const dbInfo = require("../../../vp2025config");
 const dbConf = {
 	host: dbInfo.configData.host,
 	user: dbInfo.configData.user,
 	password: dbInfo.configData.passWord,
 	database: dbInfo.configData.dataBase
-};
+}; */
 
 //@desc Home page for photogallery
 //@route GET /photogallery
@@ -18,7 +18,7 @@ const photogalleryHome = (req, res)=>{
 };
 
 const photogalleryPage = async (req, res)=>{
-	let conn;
+	//let conn;
 	const photoLimit = 5;
 	const privacy = 2;
 	let page = parseInt(req.params.page);
@@ -31,9 +31,9 @@ const photogalleryPage = async (req, res)=>{
 			page = 1;
 			return res.redirect("/photogallery/1");
 		}
-		conn= await mysql.createConnection(dbConf);
+		//conn = await mysql.createConnection(dbConf);
 		let sqlReq = "SELECT COUNT(id) AS photos FROM galleryphotos WHERE privacy >= ? AND deleted IS NULL";
-		const [countresult] = await conn.execute(sqlReq, [privacy]);
+		const [countresult] = await pool.execute(sqlReq, [privacy]);
 		const photoCount = countresult[0].photos;
 		//kontrollime ega pole liiga suur lk number
 		if((page - 1) * photoLimit >= photoCount){
@@ -60,7 +60,7 @@ const photogalleryPage = async (req, res)=>{
 		//küsin andmetabelist piiratud arvu kirjeid
 		sqlReq = "SELECT filename, alttext FROM galleryphotos WHERE privacy >= ? AND deleted IS NULL LIMIT ?,?";
 		
-		const [rows, fields] = await conn.execute(sqlReq, [privacy, skip, photoLimit]);
+		const [rows, fields] = await pool.execute(sqlReq, [privacy, skip, photoLimit]);
 		//console.log(rows);
 		let galleryData = [];
 		for (let i = 0; i < rows.length; i ++){
@@ -78,10 +78,10 @@ const photogalleryPage = async (req, res)=>{
 		res.render("photogallery", {galleryData: [], imagehref: "/gallery/thumbs/", galleryLinks: ""});
 	}
 	finally {
-		if(conn){
+		/* if(conn){
 			await conn.end();
 			console.log("Andmebaasiühendus suletud!");
-		}
+		} */
 	}
 };
 
